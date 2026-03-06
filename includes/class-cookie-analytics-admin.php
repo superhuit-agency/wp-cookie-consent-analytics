@@ -16,17 +16,15 @@ class Cookie_Analytics_Admin {
 	}
 
 	/**
-	 * Register the top-level admin menu page.
+	 * Register a Tools submenu page.
 	 */
 	public function add_admin_menu() {
-		add_menu_page(
+		add_management_page(
 			__( 'Cookie Analytics', 'cookie-analytics' ),
 			__( 'Cookie Analytics', 'cookie-analytics' ),
 			'manage_options',
 			'cookie-analytics',
-			[ $this, 'render_page' ],
-			'dashicons-chart-bar',
-			30
+			[ $this, 'render_page' ]
 		);
 	}
 
@@ -34,7 +32,7 @@ class Cookie_Analytics_Admin {
 	 * Enqueue admin styles and Chart.js on our admin page only.
 	 */
 	public function enqueue_assets( $hook ) {
-		if ( 'toplevel_page_cookie-analytics' !== $hook ) {
+		if ( 'tools_page_cookie-analytics' !== $hook ) {
 			return;
 		}
 
