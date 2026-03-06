@@ -41,7 +41,6 @@ jobs:
       - name: Install dependencies & build assets
         run: |
           yarn install --frozen-lockfile
-          yarn build
 
       - shell: bash
         run: |
