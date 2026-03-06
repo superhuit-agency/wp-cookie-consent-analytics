@@ -1,0 +1,84 @@
+---
+name: 'Release Cookie Analytics Wordpress plugin'
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  release:
+    name: 'Release'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      # PHP Composer dependencies
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+          coverage: none
+        env:
+          COMPOSER_TOKEN: ${{ github.token }}
+      - id: composer-cache
+        uses: actions/cache@v3
+        with:
+          path: vendor
+          key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-php-
+      - shell: bash
+        run: composer install --no-dev --prefer-dist --no-progress
+
+      - name: Install node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'yarn'
+      - name: Install dependencies & build assets
+        run: |
+          yarn install --frozen-lockfile
+          yarn build
+
+      - shell: bash
+        run: |
+          rsync -r \
+            --exclude .git \
+            --exclude .github \
+            --exclude .vscode \
+            --exclude .editorconfig \
+            --exclude .gitignore \
+            --exclude .nvmrc \
+            --exclude .wp-env.json \
+            --exclude composer.json \
+            --exclude composer.lock \
+            --exclude node_modules \
+            --exclude /src \
+            --exclude webpack.config.js \
+            --exclude yarn.lock \
+          . ./wp-cookie-analytics-plugin
+
+      - name: Archive Release
+        uses: montudor/action-zip@v1
+        with:
+          args: zip -qq -r wp-cookie-analytics-plugin-${{  github.ref_name }}.zip wp-cookie-analytics-plugin
+
+      - uses: 'marvinpinto/action-automatic-releases@latest'
+        with:
+          repo_token: '${{ secrets.GITHUB_TOKEN }}'
+          prerelease: false
+          files: |
+            wp-cookie-analytics-plugin-${{  github.ref_name }}.zip
+
+      - name: Upload to release-belt
+        uses: easingthemes/ssh-deploy@main
+        with:
+          SSH_PRIVATE_KEY: ${{ secrets.RELEASE_BELT_PUBLISH_PRIVATE_KEY }}
+          REMOTE_USER: ${{ secrets.RELEASE_BELT_USER }}
+          REMOTE_HOST: ${{ secrets.RELEASE_BELT_HOST }}
+          REMOTE_PORT: ${{ secrets.RELEASE_BELT_PORT }}
+          SOURCE: wp-cookie-analytics-plugin-${{  github.ref_name }}.zip
+          TARGET: '${{ secrets.RELEASE_BELT_PATH }}/releases/wordpress-plugin/superhuit/wp-cookie-analytics-plugin-${{  github.ref_name }}.zip'

@@ -1,0 +1,34 @@
+{
+  "name": "superhuit/wp-cookie-analytics-plugin",
+  "description": "Cookie Consent Analytics empowers you to track user interactions with your cookie banner through dedicated API routes that record acceptances, rejections, and personalization choices. The plugin includes a user-friendly dashboard to visualize analytics with interactive graphs and enables you to easily export your data in CSV format for further analysis.",
+  "type": "wordpress-plugin",
+  "keywords": [
+    "wordpress",
+    "cookie banner",
+    "gdpr"
+  ],
+  "license": "GPL-3.0-or-later",
+  "homepage": "https://github.com/superhuit-agency/wp-cookie-consent-analytics",
+  "authors": [
+    {
+      "name": "superhuit",
+      "email": "tech@superhuit.ch",
+      "homepage": "https://superhuit.ch",
+      "role": "Developer"
+    }
+  ],
+  "support": {
+    "issues": "https://github.com/superhuit-agency/wp-cookie-consent-analytics/issues"
+  },
+  "autoload": {
+    "psr-4": {
+      "WpCookieConsentAnalytics\\": "includes/"
+    },
+    "classmap": [
+      "includes/"
+    ]
+  },
+  "require-dev": {
+    "johnpbloch/wordpress-core": "6.1"
+  }
+}
