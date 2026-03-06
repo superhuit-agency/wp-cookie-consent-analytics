@@ -9,7 +9,41 @@
   body:
 - event_type: The type of event to record. Can be `impression`, `accept`, `reject`, or `personalize`.
 
-### Example of next api routes
+## How to install
+
+Add the following to your composer.json file:
+
+```
+"require": {
+    "superhuit/wp-cookie-analytics-plugin": "1.0.0",
+	...
+}
+"repositories": [
+		...
+		{
+			"type": "package",
+			"package": {
+				"name": "superhuit/wp-cookie-analytics-plugin",
+				"version": "0.3.0",
+				"type": "wordpress-plugin",
+				"dist": {
+					"url": "https://github.com/superhuit-agency/wp-cookie-consent-analytics/releases/download/v0.3.0/wp-cookie-analytics-plugin-v0.3.0.zip",
+					"type": "zip"
+				}
+			}
+		}
+	],
+...
+```
+
+Then run `composer install` to install the plugin.
+
+On wordpress admin, you should now see the Cookie Analytics menu item in the Tools section.
+`/wp-admin/tools.php?page=cookie-analytics`
+
+### How to connect to your frontend
+
+#### Example for Next.js project
 
 #### API folders
 
